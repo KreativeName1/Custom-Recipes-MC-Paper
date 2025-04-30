@@ -1,0 +1,16 @@
+name: Recipes
+version: '1.0-DEV'
+main: org.KreativeName.recipes.Initialize
+api-version: '1.21'
+description: Custom recipes plugin
+author: KreativeName
+
+permissions:
+  recipes.reload:
+    description: Allows reloading custom recipes
+    default: op
+  recipes.*:
+    description: Gives access to all Recipes plugin features
+    default: op
+    children:
+      recipes.reload: true

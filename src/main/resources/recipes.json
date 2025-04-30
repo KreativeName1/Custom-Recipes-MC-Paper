@@ -1,0 +1,75 @@
+[
+  {
+    "type": "ShapedRecipe",
+    "result": {
+      "item": "emerald_block",
+      "count": 64
+    },
+    "pattern": [
+      "###",
+      "#E#",
+      "###"
+    ],
+    "replace": {
+      "#": ["emerald_ore", "deepslate_emerald_ore"],
+      "E": ["emerald", "diamond"]
+    }
+  },
+  {
+    "type": "ShapelessRecipe",
+    "result": {
+      "item": "dirt",
+      "count": 5
+    },
+    "ingredients": [
+      {
+        "count": 1,
+        "choices": ["sand", "red_sand"]
+      },
+      {
+        "count": 1,
+        "choices": ["gravel"]
+      }
+    ]
+  },
+  {
+    "type": "CookingRecipe",
+    "cookingTypes": [
+      {
+        "type": "BlastingRecipe",
+        "cooking_time": 200
+      },
+      {
+        "type": "CampfireRecipe",
+        "cooking_time": 200
+      },
+      {
+        "type": "FurnaceRecipe",
+        "cooking_time": 200
+      },
+      {
+        "type": "SmokingRecipe",
+        "cooking_time": 200
+      }
+    ],
+    "result": {
+      "item": "dirt",
+      "count": 1
+    },
+    "ingredient": [
+      "sand",
+      "gravel"
+    ],
+    "exp_reward": 5
+  },
+  {
+    "type": "StonecuttingRecipe",
+    "result": {
+      "item": "emerald_block",
+      "count": 64
+    },
+    "ingredient": {
+      "item": "stone"
+    }
+  }
+]
