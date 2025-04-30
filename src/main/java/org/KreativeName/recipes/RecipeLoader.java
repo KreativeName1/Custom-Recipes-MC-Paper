@@ -1,12 +1,10 @@
 package org.KreativeName.recipes;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Villager;
+import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 
 import java.io.*;
@@ -102,7 +100,8 @@ public class RecipeLoader {
                     registerStonecuttingRecipe(key, (PluginStonecuttingRecipe) recipe);
                     registeredKeys.add(key);
                 } else if (recipe instanceof PluginMerchantRecipe) {
-                   //TODO implement
+                    registerMerchantRecipe(key, (PluginMerchantRecipe) recipe);
+                    registeredKeys.add(key);
                 }
             } catch (Exception e) {
                 plugin.getLogger().log(Level.SEVERE, "Failed to register recipe: " + recipe.Type, e);
@@ -306,7 +305,7 @@ public class RecipeLoader {
         }
 
         if (recipeJson.has("exp_reward")) {
-            recipe.ExpReward = recipeJson.get("exp_reward").getAsInt();
+            recipe.ExpReward = recipeJson.get("exp_reward").getAsBoolean();
         }
 
         if (recipeJson.has("villager_exp")) {
@@ -315,6 +314,9 @@ public class RecipeLoader {
 
         if (recipeJson.has("priceMultiplier")) {
             recipe.PriceMultiplier = recipeJson.get("priceMultiplier").getAsFloat();
+        }
+        if (recipeJson.has("profession")) {
+            recipe.Profession = getProfessionFromString(recipeJson.get("profession").getAsString());
         }
 
         if (recipeJson.has("demand")) {
@@ -329,9 +331,9 @@ public class RecipeLoader {
     }
 
     private void registerShapedRecipe(NamespacedKey key, PluginShapedRecipe recipe) {
-        org.bukkit.inventory.ShapedRecipe bukkitRecipe = new org.bukkit.inventory.ShapedRecipe(
+        ShapedRecipe bukkitRecipe = new ShapedRecipe(
                 key,
-                new org.bukkit.inventory.ItemStack(
+                new ItemStack(
                         Material.valueOf(recipe.Result.Item.toUpperCase()),
                         recipe.Result.Count
                 )
@@ -357,8 +359,8 @@ public class RecipeLoader {
                     materials[i] = Material.valueOf(materialNames.get(i).toUpperCase());
                 }
 
-                org.bukkit.inventory.RecipeChoice.MaterialChoice materialChoice =
-                        new org.bukkit.inventory.RecipeChoice.MaterialChoice(materials);
+                RecipeChoice.MaterialChoice materialChoice =
+                        new RecipeChoice.MaterialChoice(materials);
                 bukkitRecipe.setIngredient(ingredientChar, materialChoice);
             }
         }
@@ -367,9 +369,9 @@ public class RecipeLoader {
     }
 
     private void registerShapelessRecipe(NamespacedKey key, PluginShapelessRecipe recipe) {
-        org.bukkit.inventory.ShapelessRecipe bukkitRecipe = new org.bukkit.inventory.ShapelessRecipe(
+        ShapelessRecipe bukkitRecipe = new ShapelessRecipe(
                 key,
-                new org.bukkit.inventory.ItemStack(
+                new ItemStack(
                         Material.valueOf(recipe.Result.Item.toUpperCase()),
                         recipe.Result.Count
                 )
@@ -388,8 +390,8 @@ public class RecipeLoader {
                     materials[i] = Material.valueOf(ingredient.Choices[i].toUpperCase());
                 }
 
-                org.bukkit.inventory.RecipeChoice.MaterialChoice materialChoice =
-                        new org.bukkit.inventory.RecipeChoice.MaterialChoice(materials);
+                RecipeChoice.MaterialChoice materialChoice =
+                        new RecipeChoice.MaterialChoice(materials);
 
                 // Add the ingredient multiple times based on count
                 for (int i = 0; i < ingredient.Count; i++) {
@@ -405,25 +407,25 @@ public class RecipeLoader {
         List<NamespacedKey> cookingKeys = new ArrayList<>();
 
         // Create result item stack
-        org.bukkit.inventory.ItemStack resultStack = new org.bukkit.inventory.ItemStack(
+        ItemStack resultStack = new ItemStack(
                 Material.valueOf(recipe.Result.Item.toUpperCase()),
                 recipe.Result.Count
         );
 
         // Create ingredient choice
-        org.bukkit.inventory.RecipeChoice ingredientChoice;
+        RecipeChoice ingredientChoice;
 
         if (recipe.Ingredient.size() == 1) {
             // Single ingredient
             Material material = Material.valueOf(recipe.Ingredient.get(0).toUpperCase());
-            ingredientChoice = new org.bukkit.inventory.RecipeChoice.MaterialChoice(material);
+            ingredientChoice = new RecipeChoice.MaterialChoice(material);
         } else {
             // Multiple ingredient choices
             Material[] materials = new Material[recipe.Ingredient.size()];
             for (int i = 0; i < recipe.Ingredient.size(); i++) {
                 materials[i] = Material.valueOf(recipe.Ingredient.get(i).toUpperCase());
             }
-            ingredientChoice = new org.bukkit.inventory.RecipeChoice.MaterialChoice(materials);
+            ingredientChoice = new RecipeChoice.MaterialChoice(materials);
         }
 
         // Register each cooking type
@@ -433,7 +435,7 @@ public class RecipeLoader {
 
             switch (cookingType.Type) {
                 case "FurnaceRecipe":
-                    org.bukkit.inventory.FurnaceRecipe furnaceRecipe = new org.bukkit.inventory.FurnaceRecipe(
+                    FurnaceRecipe furnaceRecipe = new FurnaceRecipe(
                             cookingKey,
                             resultStack,
                             ingredientChoice,
@@ -444,7 +446,7 @@ public class RecipeLoader {
                     break;
 
                 case "BlastingRecipe":
-                    org.bukkit.inventory.BlastingRecipe blastingRecipe = new org.bukkit.inventory.BlastingRecipe(
+                    BlastingRecipe blastingRecipe = new BlastingRecipe(
                             cookingKey,
                             resultStack,
                             ingredientChoice,
@@ -455,7 +457,7 @@ public class RecipeLoader {
                     break;
 
                 case "SmokingRecipe":
-                    org.bukkit.inventory.SmokingRecipe smokingRecipe = new org.bukkit.inventory.SmokingRecipe(
+                    SmokingRecipe smokingRecipe = new SmokingRecipe(
                             cookingKey,
                             resultStack,
                             ingredientChoice,
@@ -466,7 +468,7 @@ public class RecipeLoader {
                     break;
 
                 case "CampfireRecipe":
-                    org.bukkit.inventory.CampfireRecipe campfireRecipe = new org.bukkit.inventory.CampfireRecipe(
+                    CampfireRecipe campfireRecipe = new CampfireRecipe(
                             cookingKey,
                             resultStack,
                             ingredientChoice,
@@ -481,15 +483,70 @@ public class RecipeLoader {
         return cookingKeys;
     }
 
+    private void registerMerchantRecipe(NamespacedKey key, PluginMerchantRecipe recipe) {
+        // Create result item stack
+        ItemStack resultStack = new ItemStack(
+                Material.valueOf(recipe.Result.Item.toUpperCase()),
+                recipe.Result.Count
+        );
+
+        MerchantRecipe merchantRecipe = new MerchantRecipe(
+                resultStack,
+                recipe.Uses,
+                recipe.MaxUses,
+                recipe.ExpReward,
+                recipe.VillagerExp,
+                recipe.PriceMultiplier,
+                recipe.Demand,
+                recipe.SpecialPrice
+        );
+
+        // set ingredients
+        for (PluginIngredient ingredient : recipe.Ingredients) {
+            ItemStack ingredientStack = new ItemStack(
+                    Material.valueOf(ingredient.Choices[0].toUpperCase()),
+                    ingredient.Count
+            );
+            merchantRecipe.addIngredient(ingredientStack);
+        }
+
+        // Add the recipe to villagers based on profession
+        List<Villager> villagers = plugin.getServer().getWorlds().stream()
+                .flatMap(world -> world.getEntitiesByClass(Villager.class).stream())
+                .collect(Collectors.toList());
+
+        // Filter villagers by profession if specified
+        if (recipe.Profession != null) {
+            villagers = villagers.stream()
+                    .filter(villager -> villager.getProfession().equals(recipe.Profession))
+                    .collect(Collectors.toList());
+
+            plugin.getLogger().info("Adding merchant recipe to " + villagers.size() +
+                    " villagers with profession: " + recipe.Profession);
+        } else {
+            plugin.getLogger().warning("No villager profession specified. Recipe won't be added to any villagers.");
+        }
+
+        // Add recipe to filtered villagers
+        for (org.bukkit.entity.Villager villager : villagers) {
+            // Get the current recipes
+            List<MerchantRecipe> currentRecipes = new ArrayList<>(villager.getRecipes());
+            // Add our new recipe
+            currentRecipes.add(merchantRecipe);
+            // Set the updated recipes list
+            villager.setRecipes(currentRecipes);
+        }
+    }
+
     private void registerStonecuttingRecipe(NamespacedKey key, PluginStonecuttingRecipe recipe) {
         // Create result item stack
-        org.bukkit.inventory.ItemStack resultStack = new org.bukkit.inventory.ItemStack(
+        ItemStack resultStack = new ItemStack(
                 Material.valueOf(recipe.Result.Item.toUpperCase()),
                 recipe.Result.Count
         );
 
         // Create ingredient choice
-        org.bukkit.inventory.RecipeChoice ingredientChoice;
+        RecipeChoice ingredientChoice;
 
         if (recipe.Ingredient.contains(",")) {
             // Multiple ingredient choices
@@ -498,19 +555,58 @@ public class RecipeLoader {
             for (int i = 0; i < ingredientChoices.length; i++) {
                 materials[i] = Material.valueOf(ingredientChoices[i].toUpperCase());
             }
-            ingredientChoice = new org.bukkit.inventory.RecipeChoice.MaterialChoice(materials);
+            ingredientChoice = new RecipeChoice.MaterialChoice(materials);
         } else {
             // Single ingredient choice
             Material material = Material.valueOf(recipe.Ingredient.toUpperCase());
-            ingredientChoice = new org.bukkit.inventory.RecipeChoice.MaterialChoice(material);
+            ingredientChoice = new RecipeChoice.MaterialChoice(material);
         }
 
-        org.bukkit.inventory.StonecuttingRecipe stonecuttingRecipe = new org.bukkit.inventory.StonecuttingRecipe(
+        StonecuttingRecipe stonecuttingRecipe = new StonecuttingRecipe(
                 key,
                 resultStack,
                 ingredientChoice
         );
 
         plugin.getServer().addRecipe(stonecuttingRecipe);
+    }
+
+
+    private Villager.Profession getProfessionFromString(String professionString) {
+        switch (professionString.toUpperCase()) {
+            case "BUTCHER":
+                return Villager.Profession.BUTCHER;
+            case "FARMER":
+                return Villager.Profession.FARMER;
+            case "CARTOGRAPHER":
+                return Villager.Profession.CARTOGRAPHER;
+            case "ARMORER":
+                return Villager.Profession.ARMORER;
+            case "CLERIC":
+                return Villager.Profession.CLERIC;
+            case "FISHERMAN":
+                return Villager.Profession.FISHERMAN;
+            case "FLETCHER":
+                return Villager.Profession.FLETCHER;
+            case "LEATHERWORKER":
+                return Villager.Profession.LEATHERWORKER;
+            case "LIBRARIAN":
+                return Villager.Profession.LIBRARIAN;
+            case "MASON":
+                return Villager.Profession.MASON;
+            case "NITWIT":
+                return Villager.Profession.NITWIT;
+            case "NONE":
+                return Villager.Profession.NONE;
+            case "SHEPHERD":
+                return Villager.Profession.SHEPHERD;
+            case "TOOLSMITH":
+                return Villager.Profession.TOOLSMITH;
+            case "WEAPONSMITH":
+                return Villager.Profession.WEAPONSMITH;
+
+            default:
+                return Villager.Profession.NONE;
+        }
     }
 }

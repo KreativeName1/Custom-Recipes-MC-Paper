@@ -71,5 +71,29 @@
     "ingredient": {
       "item": "stone"
     }
+  },
+  {
+    "type": "MerchantRecipe",
+    "result": {
+      "item": "diamond",
+      "count": 1
+    },
+    "ingredients": [
+      {
+        "item": "emerald",
+        "count": 10
+      },
+      {
+        "item": "gold_ingot",
+        "count": 5
+      }
+    ],
+    "max_uses": 5,
+    "exp_reward": true,
+    "villager_exp": 1,
+    "priceMultiplier": 0.05,
+    "demand": 0,
+    "special_price": 0,
+    "profession": "LIBRARIAN"
   }
 ]
