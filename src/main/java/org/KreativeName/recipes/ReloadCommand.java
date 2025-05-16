@@ -24,18 +24,24 @@ public class ReloadCommand extends Command {
             return true;
         }
 
-        // Remove existing recipes
-        for (org.bukkit.NamespacedKey key : plugin.registeredRecipeKeys) {
-            plugin.getServer().removeRecipe(key);
+        try {
+            // Remove existing recipes
+            for (org.bukkit.NamespacedKey key : plugin.registeredRecipeKeys) {
+                plugin.getServer().removeRecipe(key);
+            }
+            plugin.registeredRecipeKeys.clear();
+
+            // Load and register new recipes
+            RecipeLoader recipeLoader = new RecipeLoader(plugin);
+            List<PluginRecipe> recipes = recipeLoader.loadRecipes("recipes.json");
+            plugin.registeredRecipeKeys.addAll(recipeLoader.registerRecipes(recipes));
+
+            commandSender.sendMessage(ChatColor.GREEN + "Successfully reloaded " + recipes.size() + " custom recipes!");
+        } catch (Exception e) {
+            commandSender.sendMessage(ChatColor.RED + "The JSON file is either missing or invalid. Please check the server logs for details.");
+            plugin.getLogger().severe("Error reloading recipes: " + e.getMessage());
         }
-        plugin.registeredRecipeKeys.clear();
 
-        // Load and register new recipes
-        RecipeLoader recipeLoader = new RecipeLoader(plugin);
-        List<PluginRecipe> recipes = recipeLoader.loadRecipes("recipes.json");
-        plugin.registeredRecipeKeys.addAll(recipeLoader.registerRecipes(recipes));
-
-        commandSender.sendMessage(ChatColor.GREEN + "Successfully reloaded " + recipes.size() + " custom recipes!");
         return true;
     }
 

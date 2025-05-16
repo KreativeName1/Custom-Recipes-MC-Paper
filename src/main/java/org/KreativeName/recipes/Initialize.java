@@ -16,21 +16,36 @@ public final class Initialize extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        RecipeLoader recipeLoader = new RecipeLoader(this);
-        List<PluginRecipe> recipes = recipeLoader.loadRecipes("recipes.json");
-        registeredRecipeKeys.addAll(recipeLoader.registerRecipes(recipes));
-        getLogger().info("Loaded " + recipes.size() + " custom recipes");
-        commandMap = getServer().getCommandMap();
-        commandMap.register("recipes", new ReloadCommand(this));
-
+        try {
+            try {
+            RecipeLoader recipeLoader = new RecipeLoader(this);
+            List<PluginRecipe> recipes = recipeLoader.loadRecipes("recipes.json");
+            registeredRecipeKeys.addAll(recipeLoader.registerRecipes(recipes));
+            getLogger().info("Loaded " + recipes.size() + " custom recipes");
+            } catch (Exception e) {
+                getLogger().severe("Failed to load recipes: " + e.getMessage());
+                e.printStackTrace();
+            }
+            commandMap = getServer().getCommandMap();
+            commandMap.register("recipes", new ReloadCommand(this));
+        } catch (Exception e) {
+            getLogger().severe("An error occurred during plugin enable: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
-    
+
     @Override
     public void onDisable() {
-        for (NamespacedKey key : registeredRecipeKeys) {
-            getServer().removeRecipe(key);
+        try {
+            for (NamespacedKey key : registeredRecipeKeys) {
+                getServer().removeRecipe(key);
+            }
+            getLogger().info("Removed " + registeredRecipeKeys.size() + " custom recipes");
+            registeredRecipeKeys.clear();
+            commandMap.clearCommands();
+        } catch (Exception e) {
+            getLogger().severe("An error occurred during plugin disable: " + e.getMessage());
+            e.printStackTrace();
         }
-        getLogger().info("Removed " + registeredRecipeKeys.size() + " custom recipes");
-        registeredRecipeKeys.clear();
     }
 }

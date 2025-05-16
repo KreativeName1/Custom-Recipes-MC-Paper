@@ -67,8 +67,6 @@ public class RecipeLoader {
             }
         } catch (IOException e) {
             plugin.getLogger().log(Level.SEVERE, "Failed to load recipes from " + recipeFile.getAbsolutePath(), e);
-        } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Error parsing recipes", e);
         }
 
         return recipes;
