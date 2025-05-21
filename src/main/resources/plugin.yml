@@ -5,12 +5,27 @@ api-version: '1.21'
 description: Custom recipes plugin
 author: KreativeName
 
+commands:
+  customrecipe:
+    description: Manage custom recipes
+    usage: /customrecipe <add|remove|list|reload|help>
+    aliases: [cr]
+    permission: recipes.use
+    permission-message: You don't have permission to use this command.
+
 permissions:
+  recipes.use:
+    description: Allows using the base recipe command
+    default: op
+  recipes.add:
+    description: Allows adding new recipes
+    default: op
+  recipes.remove:
+    description: Allows removing recipes
+    default: op
+  recipes.list:
+    description: Allows listing all recipes
+    default: op
   recipes.reload:
-    description: Allows reloading custom recipes
+    description: Allows reloading recipes from file
     default: op
-  recipes.*:
-    description: Gives access to all Recipes plugin features
-    default: op
-    children:
-      recipes.reload: true

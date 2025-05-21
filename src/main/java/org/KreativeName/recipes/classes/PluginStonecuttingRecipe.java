@@ -1,6 +1,4 @@
-package org.KreativeName.recipes;
-
-import java.util.List;
+package org.KreativeName.recipes.classes;
 
 public class PluginStonecuttingRecipe extends PluginRecipe {
     public String Ingredient;

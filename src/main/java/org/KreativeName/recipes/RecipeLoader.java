@@ -1,6 +1,7 @@
 package org.KreativeName.recipes;
 
 import com.google.gson.*;
+import org.KreativeName.recipes.classes.*;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Villager;

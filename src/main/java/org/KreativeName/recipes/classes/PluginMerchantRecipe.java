@@ -1,4 +1,4 @@
-package org.KreativeName.recipes;
+package org.KreativeName.recipes.classes;
 
 import org.bukkit.entity.Villager;
 

@@ -12,7 +12,7 @@
     ],
     "replace": {
       "#": ["emerald_ore", "deepslate_emerald_ore"],
-      "E": ["emerald", "diamond"]
+      "E": ["emerald"]
     }
   },
   {
@@ -94,6 +94,6 @@
     "priceMultiplier": 0.05,
     "demand": 0,
     "special_price": 0,
-    "profession": "LIBRARIAN"
+    "profession": ["LIBRARIAN"]
   }
 ]
