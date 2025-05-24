@@ -23,6 +23,7 @@ public class ShapedRecipeBuilder implements RecipeBuilder {
     public void build(CommandSender sender, String[] args) {
         if (args.length < 8) {
             sender.sendMessage("§cUsage: /cr add shaped <result_item> <result_count> <pattern_line1> <pattern_line2> <pattern_line3> <key1> <material1> [<key2> <material2>...]");
+            sender.sendMessage("§cNote: Use underscores (_) to represent empty spaces in the pattern.");
             return;
         }
 
@@ -48,8 +49,9 @@ public class ShapedRecipeBuilder implements RecipeBuilder {
             Map<Character, List<String>> ingredients = parseIngredients(args, 7, sender);
             if (ingredients == null) return;
 
-            if (!validator.validatePatternKeys(patternLines, ingredients.keySet())) {
-                sender.sendMessage("§cAll keys in pattern must be defined.");
+            String[] validationPattern = convertUnderscoresToSpaces(patternLines);
+            if (!validator.validatePatternKeys(validationPattern, ingredients.keySet())) {
+                sender.sendMessage("§cAll keys in pattern must be defined (except underscores for empty spaces).");
                 return;
             }
 
@@ -63,6 +65,14 @@ public class ShapedRecipeBuilder implements RecipeBuilder {
         }
     }
 
+    private String[] convertUnderscoresToSpaces(String[] patternLines) {
+        String[] converted = new String[patternLines.length];
+        for (int i = 0; i < patternLines.length; i++) {
+            converted[i] = patternLines[i].replace('_', ' ');
+        }
+        return converted;
+    }
+
     private Map<Character, List<String>> parseIngredients(String[] args, int startIndex, CommandSender sender) {
         Map<Character, List<String>> ingredients = new HashMap<>();
 
@@ -73,6 +83,12 @@ public class ShapedRecipeBuilder implements RecipeBuilder {
             }
 
             char key = args[i].charAt(0);
+
+            if (key == '_') {
+                sender.sendMessage("§cUnderscore (_) cannot be used as a key - it represents empty spaces.");
+                return null;
+            }
+
             String materialStr = args[i + 1];
             String[] materials = materialStr.split(",");
 
@@ -104,7 +120,8 @@ public class ShapedRecipeBuilder implements RecipeBuilder {
 
         JsonArray patternArray = new JsonArray();
         for (String line : patternLines) {
-            patternArray.add(line);
+            String convertedLine = line.replace('_', ' ');
+            patternArray.add(convertedLine);
         }
         recipeJson.add("pattern", patternArray);
 
