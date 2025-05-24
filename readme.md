@@ -1,7 +1,7 @@
 # Custom Recipe Loader Plugin
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/YourUsername/Recipes/releases)
-[![Minecraft](https://img.shields.io/badge/minecraft-1.16+-green.svg)](https://minecraft.net)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/YourUsername/Recipes/releases)
+[![Minecraft](https://img.shields.io/badge/minecraft-1.21.5+-green.svg)](https://minecraft.net)
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
 A powerful and flexible Minecraft plugin that enables server administrators to create and manage custom recipes directly in-game. Add unique crafting experiences to your server without touching a single line of code!
@@ -25,7 +25,7 @@ A powerful and flexible Minecraft plugin that enables server administrators to c
 
 ### Installation
 
-1. **Download** the latest release from our [releases page](https://github.com/YourUsername/Recipes/releases)
+1. **Download** the latest release from the [releases page](https://github.com/KreativeName1/Custom-Recipes-MC-Paper/releases)
 2. **Place** the JAR file in your server's `plugins/` directory
 3. **Restart** your server
 4. **Done!** The plugin creates default configuration files automatically
