@@ -59,7 +59,7 @@ Create recipes that require a specific crafting pattern.
 **Parameters:**
 - `result` - Item to craft (e.g., `DIAMOND_SWORD`)
 - `count` - Quantity produced (1-64)
-- `pattern` - 9-character grid pattern (e.g., `"ABC DEF GHI"`)
+- `pattern` - 9-character grid pattern, use underscores to represent whitespaces (e.g., `"ABC DEF G__"`)
 - `char` - Pattern character (A-Z)
 - `ingredients` - Materials for that character (comma-separated for multiple options)
 
@@ -70,7 +70,7 @@ Create recipes that require a specific crafting pattern.
 /cr add shaped GOLDEN_APPLE 1 GGG GAG GGG G GOLD_INGOT A APPLE
 
 # Custom Sword Recipe
-/cr add shaped DIAMOND_SWORD 1  D  D  S  D DIAMOND S STICK
+/cr add shaped DIAMOND_SWORD 1  _D_  _D_  _S_  D DIAMOND S STICK
 
 # Flexible Recipe (multiple ingredient options)
 /cr add shaped BREAD 4 WWW W WHEAT,POTATO,CARROT
