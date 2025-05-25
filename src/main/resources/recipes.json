@@ -6,9 +6,9 @@
       "count": 64
     },
     "pattern": [
-      "###",
+      "_#_",
       "#E#",
-      "###"
+      "_#_"
     ],
     "replace": {
       "#": ["emerald_ore", "deepslate_emerald_ore"],

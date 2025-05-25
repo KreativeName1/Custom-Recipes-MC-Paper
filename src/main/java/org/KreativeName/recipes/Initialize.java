@@ -1,17 +1,19 @@
 package org.KreativeName.recipes;
 
-import org.KreativeName.recipes.classes.PluginRecipe;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandMap;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public final class Initialize extends JavaPlugin {
-    public static List<NamespacedKey> registeredRecipeKeys = new ArrayList<>();
+    public static Map<NamespacedKey, Recipe> registeredRecipes = new HashMap<>();
     private CommandMap commandMap;
 
     @Override
@@ -35,9 +37,13 @@ public final class Initialize extends JavaPlugin {
 
             try {
                 RecipeLoader recipeLoader = new RecipeLoader(this);
-                List<PluginRecipe> recipes = recipeLoader.loadRecipes("recipes.json");
-                registeredRecipeKeys.addAll(recipeLoader.registerRecipes(recipes));
-                getLogger().info("Loaded " + recipes.size() + " custom recipes");
+                Map<NamespacedKey, Recipe> map = recipeLoader.loadRecipes();
+                for (Map.Entry<NamespacedKey, Recipe> entry : map.entrySet()) {
+                    this.getLogger().info("Registering recipe: " + entry.getKey());
+                    getServer().addRecipe(entry.getValue());
+                    registeredRecipes.put(entry.getKey(), entry.getValue());
+                }
+                getLogger().info("Loaded " + map.size() + " custom recipes");
             } catch (Exception e) {
                 getLogger().severe("Failed to load recipes: " + e.getMessage());
                 e.printStackTrace();
@@ -56,11 +62,19 @@ public final class Initialize extends JavaPlugin {
     @Override
     public void onDisable() {
         try {
-            for (NamespacedKey key : registeredRecipeKeys) {
+            for (NamespacedKey key : registeredRecipes.keySet()) {
                 getServer().removeRecipe(key);
             }
-            getLogger().info("Removed " + registeredRecipeKeys.size() + " custom recipes");
-            registeredRecipeKeys.clear();
+            getLogger().info("Removed " + registeredRecipes.keySet().size() + " custom recipes");
+            registeredRecipes.clear();
+
+            if (commandMap != null) {
+                commandMap.getKnownCommands().remove("customrecipe");
+                getLogger().info("Unregistered customrecipe command");
+            }
+
+            getLogger().info("Custom Recipes plugin disabled successfully");
+
         } catch (Exception e) {
             getLogger().severe("An error occurred during plugin disable: " + e.getMessage());
             e.printStackTrace();
