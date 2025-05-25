@@ -1,7 +1,10 @@
 package org.KreativeName.recipes.utils;
 
 import com.google.gson.*;
+import org.KreativeName.recipes.Initialize;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +31,9 @@ public class RecipeFileManager {
         JsonArray recipesArray = JsonParser.parseString(jsonContent).getAsJsonArray();
         recipesArray.add(recipeJson);
 
+
+
+
         try (FileWriter writer = new FileWriter(recipeFile, StandardCharsets.UTF_8)) {
             writer.write(gson.toJson(recipesArray));
         }
@@ -49,6 +55,11 @@ public class RecipeFileManager {
             try (FileWriter writer = new FileWriter(recipeFile, StandardCharsets.UTF_8)) {
                 writer.write(gson.toJson(recipesArray));
             }
+
+            Initialize.unregisteredRecipes.put(
+                    Initialize.registeredRecipes.keySet().toArray(new NamespacedKey[0])[index],
+                    Initialize.registeredRecipes.get(Initialize.registeredRecipes.keySet().toArray(new NamespacedKey[0])[index])
+            );
 
             sender.sendMessage("§aSuccessfully removed " + removedType + " recipe at index " + index);
             sender.sendMessage("§7Use /cr reload to apply changes.");
@@ -78,6 +89,9 @@ public class RecipeFileManager {
                 JsonObject result = recipe.getAsJsonObject("result");
                 String resultItem = result.get("item").getAsString();
                 int resultCount = result.get("count").getAsInt();
+                String keyString = recipe.get("key").getAsString();
+
+                boolean isLoaded = false;
 
                 if ("CookingRecipe".equals(type) && recipe.has("cookingTypes")) {
                     JsonArray cookingTypes = recipe.getAsJsonArray("cookingTypes");
@@ -88,6 +102,14 @@ public class RecipeFileManager {
                         String cookType = cookingType.get("type").getAsString();
                         cookType = cookType.replace("Recipe", "");
 
+                        // Check if cooking recipe is loaded (with type suffix)
+                        NamespacedKey cookingKey = new NamespacedKey(plugin.getName().toLowerCase(),
+                                keyString + "_" + cookType.toLowerCase());
+                        if (org.KreativeName.recipes.Initialize.registeredRecipes.containsKey(cookingKey)) {
+                            isLoaded = true;
+                        }
+
+
                         typesStr.append(cookType.toLowerCase());
                         if (j < cookingTypes.size() - 1) {
                             typesStr.append(",");
@@ -95,22 +117,41 @@ public class RecipeFileManager {
                     }
                     typesStr.append(")");
 
-                    sender.sendMessage(String.format("§e%d. §f%s %s §7- §f%dx %s",
-                            i, type, typesStr, resultCount, resultItem));
+                    String colorPrefix = isLoaded ? "§f" : "§c"; // White if loaded, red if not
+                    sender.sendMessage(String.format("§e%d. %s%s %s §7- %s%dx %s",
+                            i, colorPrefix, type, typesStr, colorPrefix, resultCount, resultItem));
                 } else {
-                    sender.sendMessage(String.format("§e%d. §f%s §7- §f%dx %s",
-                            i, type, resultCount, resultItem));
-                }
-            }
+                    // For non-cooking recipes, check the key directly
+                    NamespacedKey key = new NamespacedKey(plugin.getName().toLowerCase(), keyString);
+                    isLoaded = org.KreativeName.recipes.Initialize.registeredRecipes.containsKey(key);
 
-            sender.sendMessage("§7Use /cr reload to apply any changes.");
+                    String colorPrefix = isLoaded ? "§f" : "§c"; // White if loaded, red if not
+                    sender.sendMessage(String.format("§e%d. %s%s §7- %s%dx %s",
+                            i, colorPrefix, type, colorPrefix, resultCount, resultItem));
+                }
+
+
+            }
+        if (!Initialize.unregisteredRecipes.isEmpty()) {
+            for (NamespacedKey key : Initialize.unregisteredRecipes.keySet()) {
+                Recipe recipe = Initialize.unregisteredRecipes.get(key);
+                String type = getTypeFromRecipe(recipe);
+                String resultItem = recipe.getResult().getType().name();
+                int resultCount = recipe.getResult().getAmount();
+                sender.sendMessage(String.format("§7- %s - %dx %s",
+                        type, resultCount, resultItem));
+            }
+        }
+
+        sender.sendMessage("");
+        sender.sendMessage("§7Legend: §fLoaded, §cNot Loaded, §7Removed, still loaded");
+        sender.sendMessage("§7Use /cr reload to apply any changes.");
 
         } catch (Exception e) {
             sender.sendMessage("§cFailed to list recipes: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
     public String readRecipeFile() throws IOException {
         if (!recipeFile.exists()) {
             recipeFile.getParentFile().mkdirs();
@@ -152,5 +193,21 @@ public class RecipeFileManager {
         }
 
         return totalCount;
+    }
+
+
+    private String getTypeFromRecipe(Recipe recipe) {
+        if (recipe instanceof org.bukkit.inventory.CookingRecipe) {
+            return "CookingRecipe";
+        } else if (recipe instanceof org.bukkit.inventory.ShapedRecipe) {
+            return "ShapedRecipe";
+        } else if (recipe instanceof org.bukkit.inventory.ShapelessRecipe) {
+            return "ShapelessRecipe";
+        } else if (recipe instanceof org.bukkit.inventory.MerchantRecipe) {
+            return "MerchantRecipe";
+        } else if (recipe instanceof org.bukkit.inventory.RecipeChoice) {
+            return "RecipeChoice";
+        }
+        return "UnknownRecipeType";
     }
 }

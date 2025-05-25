@@ -2,6 +2,7 @@ package org.KreativeName.recipes.builders;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.KreativeName.recipes.utils.KeyGenerator;
 import org.KreativeName.recipes.utils.MaterialValidator;
 import org.KreativeName.recipes.utils.RecipeFileManager;
 import org.bukkit.command.CommandSender;
@@ -111,6 +112,7 @@ public class ShapelessRecipeBuilder implements RecipeBuilder {
     private JsonObject createShapelessRecipeJson(String resultItem, int resultCount, List<JsonObject> ingredients) {
         JsonObject recipeJson = new JsonObject();
         recipeJson.addProperty("type", "ShapelessRecipe");
+        recipeJson.addProperty("key", KeyGenerator.generateKey("shapeless", resultItem));
 
         JsonObject resultJson = new JsonObject();
         resultJson.addProperty("item", resultItem.toLowerCase());

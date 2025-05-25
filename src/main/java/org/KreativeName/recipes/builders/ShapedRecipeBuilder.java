@@ -2,6 +2,7 @@ package org.KreativeName.recipes.builders;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.KreativeName.recipes.utils.KeyGenerator;
 import org.KreativeName.recipes.utils.RecipeFileManager;
 import org.KreativeName.recipes.utils.MaterialValidator;
 import org.bukkit.Material;
@@ -53,7 +54,7 @@ public class ShapedRecipeBuilder implements RecipeBuilder {
             if (!validator.validatePatternKeys(validationPattern, ingredients.keySet())) {
                 sender.sendMessage("§cAll keys in pattern must be defined (except underscores for empty spaces).");
                 return;
-            }
+            };
 
             JsonObject recipeJson = createShapedRecipeJson(resultItem, resultCount, patternLines, ingredients);
             fileManager.addRecipeToFile(recipeJson);
@@ -112,6 +113,7 @@ public class ShapedRecipeBuilder implements RecipeBuilder {
                                               String[] patternLines, Map<Character, List<String>> ingredients) {
         JsonObject recipeJson = new JsonObject();
         recipeJson.addProperty("type", "ShapedRecipe");
+        recipeJson.addProperty("key", KeyGenerator.generateKey("shaped", resultItem));
 
         JsonObject resultJson = new JsonObject();
         resultJson.addProperty("item", resultItem.toLowerCase());

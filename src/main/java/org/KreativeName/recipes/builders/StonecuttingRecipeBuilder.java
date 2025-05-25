@@ -2,6 +2,7 @@ package org.KreativeName.recipes.builders;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.KreativeName.recipes.utils.KeyGenerator;
 import org.KreativeName.recipes.utils.MaterialValidator;
 import org.KreativeName.recipes.utils.RecipeFileManager;
 import org.bukkit.command.CommandSender;
@@ -62,6 +63,7 @@ public class StonecuttingRecipeBuilder implements RecipeBuilder {
     private JsonObject createStonecuttingRecipeJson(String resultItem, int resultCount, String ingredients) {
         JsonObject recipeJson = new JsonObject();
         recipeJson.addProperty("type", "StonecuttingRecipe");
+        recipeJson.addProperty("key", KeyGenerator.generateKey("stonecutting", resultItem));
 
         JsonObject resultJson = new JsonObject();
         resultJson.addProperty("item", resultItem.toLowerCase());

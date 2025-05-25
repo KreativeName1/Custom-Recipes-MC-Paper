@@ -35,6 +35,7 @@ public class ReloadCommandHandler implements CommandHandler {
                 plugin.getServer().removeRecipe(key);
             }
             Initialize.registeredRecipes.clear();
+            Initialize.unregisteredRecipes.clear();
 
             // get amount of recipes inside the file
 

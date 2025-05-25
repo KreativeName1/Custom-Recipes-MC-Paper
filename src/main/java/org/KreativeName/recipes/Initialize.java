@@ -14,6 +14,7 @@ import java.util.Map;
 
 public final class Initialize extends JavaPlugin {
     public static Map<NamespacedKey, Recipe> registeredRecipes = new HashMap<>();
+    public static Map<NamespacedKey, Recipe> unregisteredRecipes = new HashMap<>();
     private CommandMap commandMap;
 
     @Override

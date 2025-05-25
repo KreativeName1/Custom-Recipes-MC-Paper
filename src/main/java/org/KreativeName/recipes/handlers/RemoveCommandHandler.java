@@ -1,6 +1,7 @@
 package org.KreativeName.recipes.handlers;
 
 
+import org.KreativeName.recipes.Initialize;
 import org.KreativeName.recipes.utils.RecipeFileManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +27,7 @@ public class RemoveCommandHandler implements CommandHandler {
 
         try {
             int index = Integer.parseInt(args[1]);
+
             fileManager.removeRecipeByIndex(sender, index);
         } catch (NumberFormatException e) {
             sender.sendMessage("§cIndex must be a number.");

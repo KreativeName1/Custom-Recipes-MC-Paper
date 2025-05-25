@@ -2,6 +2,7 @@ package org.KreativeName.recipes.builders;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.KreativeName.recipes.utils.KeyGenerator;
 import org.KreativeName.recipes.utils.MaterialValidator;
 import org.KreativeName.recipes.utils.RecipeFileManager;
 import org.bukkit.command.CommandSender;
@@ -122,6 +123,7 @@ public class CookingRecipeBuilder implements RecipeBuilder {
                                              List<JsonObject> cookingTypes, List<String> ingredients) {
         JsonObject recipeJson = new JsonObject();
         recipeJson.addProperty("type", "CookingRecipe");
+        recipeJson.addProperty("key", KeyGenerator.generateKey("cooking", resultItem));
 
         JsonObject resultJson = new JsonObject();
         resultJson.addProperty("item", resultItem.toLowerCase());

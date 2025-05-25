@@ -1,6 +1,7 @@
 [
   {
     "type": "ShapedRecipe",
+    "key":  "test1",
     "result": {
       "item": "emerald_block",
       "count": 64
@@ -17,6 +18,7 @@
   },
   {
     "type": "ShapelessRecipe",
+    "key": "test2",
     "result": {
       "item": "dirt",
       "count": 5
@@ -34,6 +36,7 @@
   },
   {
     "type": "CookingRecipe",
+    "key": "test3",
     "cookingTypes": [
       {
         "type": "BlastingRecipe",
@@ -64,6 +67,7 @@
   },
   {
     "type": "StonecuttingRecipe",
+    "key": "test4",
     "result": {
       "item": "emerald_block",
       "count": 64
@@ -74,6 +78,7 @@
   },
   {
     "type": "MerchantRecipe",
+    "key": "test5",
     "result": {
       "item": "diamond",
       "count": 1

@@ -42,7 +42,8 @@ public class RecipeLoader {
             }
 
             String type = recipeJson.get("type").getAsString();
-            NamespacedKey key = new NamespacedKey(plugin.getName().toLowerCase(), "recipe_" + recipeJson.hashCode());
+            String keyString = recipeJson.get("key").getAsString();
+            NamespacedKey key = new NamespacedKey(plugin.getName().toLowerCase(), keyString);
 
             switch (type) {
                 case "ShapedRecipe":
