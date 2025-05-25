@@ -28,7 +28,6 @@ A powerful and flexible Minecraft plugin that enables server administrators to c
 1. **Download** the latest release from the [releases page](https://github.com/KreativeName1/Custom-Recipes-MC-Paper/releases)
 2. **Place** the JAR file in your server's `plugins/` directory
 3. **Restart** your server
-4. **Done!** The plugin creates default configuration files automatically
 
 ### Basic Usage
 
