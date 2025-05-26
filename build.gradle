@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'org.KreativeName'
-version = '1.1'
+version = '1.2'
 
 repositories {
     mavenCentral()
@@ -34,7 +34,7 @@ tasks {
     shadowJar {
         archiveBaseName.set('Recipes')
         archiveClassifier.set('')
-        archiveVersion.set('1.0-Dev')
+        archiveVersion.set('1.2')
     }
 }
 
