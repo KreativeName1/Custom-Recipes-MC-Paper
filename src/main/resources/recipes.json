@@ -1,7 +1,7 @@
 [
   {
     "type": "ShapedRecipe",
-    "key":  "test1",
+    "key":  "recipe_shaped_emerald_block_33176cdce9084dd2b21bdbe09b74dd1e",
     "result": {
       "item": "emerald_block",
       "count": 64
@@ -18,7 +18,7 @@
   },
   {
     "type": "ShapelessRecipe",
-    "key": "test2",
+    "key": "recipe_shapeless_dirt_2b3f4a1c8e9d4f0b8a1c2d3e4f5a6b7c",
     "result": {
       "item": "dirt",
       "count": 5
@@ -36,7 +36,7 @@
   },
   {
     "type": "CookingRecipe",
-    "key": "test3",
+    "key": "recipe_cooking_dirt_3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f",
     "cookingTypes": [
       {
         "type": "BlastingRecipe",
@@ -67,7 +67,7 @@
   },
   {
     "type": "StonecuttingRecipe",
-    "key": "test4",
+    "key": "recipe_stonecutting_emerald_block_4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9",
     "result": {
       "item": "emerald_block",
       "count": 64
@@ -75,30 +75,5 @@
     "ingredient": {
       "item": "stone"
     }
-  },
-  {
-    "type": "MerchantRecipe",
-    "key": "test5",
-    "result": {
-      "item": "diamond",
-      "count": 1
-    },
-    "ingredients": [
-      {
-        "item": "emerald",
-        "count": 10
-      },
-      {
-        "item": "gold_ingot",
-        "count": 5
-      }
-    ],
-    "max_uses": 5,
-    "exp_reward": true,
-    "villager_exp": 1,
-    "priceMultiplier": 0.05,
-    "demand": 0,
-    "special_price": 0,
-    "profession": ["LIBRARIAN"]
   }
 ]

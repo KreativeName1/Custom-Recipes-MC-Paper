@@ -1,6 +1,6 @@
 # Custom Recipe Loader Plugin
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/YourUsername/Recipes/releases)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://github.com/KreativeName1/Custom-Recipes-MC-Paper/releases)
 [![Minecraft](https://img.shields.io/badge/minecraft-1.21.5+-green.svg)](https://minecraft.net)
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
@@ -13,13 +13,27 @@ A powerful and flexible Minecraft plugin that enables server administrators to c
 - **Shapeless Crafting** - Mix ingredients in any arrangement
 - **Cooking Recipes** - Custom furnace, smoker, blast furnace, and campfire recipes
 - **Stonecutting** - Precision cutting recipes for the stonecutter
-- **Villager Trading** - Custom merchant trades for enhanced gameplay
 
 ### 🎮 Easy Management
 - **In-Game Commands** - No need to edit files manually
 - **Live Reloading** - Apply changes without server restarts
 - **Persistent Storage** - All recipes saved automatically
 - **Permission System** - Control who can manage recipes
+
+## 📦 Requirements
+- **Minecraft Server**: Paper 1.21.5
+- **Java**: Java 21 or higher
+- **Permissions Plugin**: Optional but recommended for permission management
+- **Server Access**: Ability to upload plugins to your server's plugins directory
+- **Storage**: Minimal disk space (plugin is lightweight)
+
+## Missing Features/Limitations/Bugs
+- **Villager Trading**: Not implemented yet
+- **Loading**: Reloading recipes may cause lag during the process
+- **Custom items**: Currently only supports vanilla items and blocks
+- **Recipe Editing**: Recipes can be added or removed, but not edited directly - you must remove and recreate
+- **Support**: Currently only for Minecraft 1.21.5
+- **Commands**: Output of Commands could be improved with better error handling and user feedback
 
 ## 🚀 Quick Start
 
@@ -58,18 +72,18 @@ Create recipes that require a specific crafting pattern.
 **Parameters:**
 - `result` - Item to craft (e.g., `DIAMOND_SWORD`)
 - `count` - Quantity produced (1-64)
-- `pattern` - 9-character grid pattern, use underscores to represent whitespaces (e.g., `"ABC DEF G__"`)
+- `pattern` - 9-character grid pattern, use underscores to represent whitespaces (e.g., `"ABC DEF G__"`), Row 1 -> Top, Row 2 -> Middle, Row 3 -> Bottom
 - `char` - Pattern character (A-Z)
 - `ingredients` - Materials for that character (comma-separated for multiple options)
 
 **Examples:**
 
 ```bash
-# Golden Apple Recipe (surround apple with gold)
-/cr add shaped GOLDEN_APPLE 1 GGG GAG GGG G GOLD_INGOT A APPLE
+# Create a name tag recipe
+/cr add shaped NAME_TAG 1 __S _PS P__ S STRING P PAPER
 
-# Custom Sword Recipe
-/cr add shaped DIAMOND_SWORD 1  _D_  _D_  _S_  D DIAMOND S STICK
+# Custom netherite upgrade recipe
+/cr add shaped NETHERITE_PICKAXE 1 NNN _D_ _S_ N NETHERITE_SCRAP D DIAMOND_PICKAXE S STICK
 
 # Flexible Recipe (multiple ingredient options)
 /cr add shaped BREAD 4 WWW W WHEAT,POTATO,CARROT
@@ -90,8 +104,8 @@ Create recipes where ingredient order doesn't matter.
 # Convert coal blocks to diamonds
 /cr add shapeless DIAMOND 1 COAL_BLOCK 2 GOLD_INGOT 1
 
-# Recycling recipe
-/cr add shapeless IRON_INGOT 9 IRON_BLOCK 1
+# Recycle end rods into glowstone
+/cr add shapeless GLOWSTONE_DUST 3 END_ROD 1
 
 # Multiple input options
 /cr add shapeless GUNPOWDER 4 COAL,CHARCOAL 2 BONE_MEAL 1
@@ -114,8 +128,8 @@ Add custom smelting, smoking, blasting, and campfire recipes.
 **Examples:**
 
 ```bash
-# Fast diamond smelting
-/cr add cooking DIAMOND 1 2.0 furnace,blasting 100 COAL_BLOCK
+# Create amethyst shards from calcite or tuff
+/cr add cooking AMETHYST_SHARD 2 1.5 furnace,blasting 200,100 CALCITE,TUFF
 
 # Custom food recipe
 /cr add cooking COOKED_BEEF 2 1.5 smoking,campfire 300 ROTTEN_FLESH,SPIDER_EYE
@@ -136,46 +150,14 @@ Create precise cutting recipes for the stonecutter.
 **Examples:**
 
 ```bash
-# Convert blocks efficiently
-/cr add stonecutting DIAMOND 4 DIAMOND_BLOCK
+# Create chains from iron ingots
+/cr add stonecutting CHAIN 4 IRON_INGOT
 
-# Alternative crafting method
-/cr add stonecutting STICK 8 OAK_LOG,BIRCH_LOG,SPRUCE_LOG
+# Make glass panes more efficiently
+/cr add stonecutting GLASS_PANE 16 GLASS
 
-# Resource conversion
-/cr add stonecutting QUARTZ 6 QUARTZ_BLOCK
-```
-
-### 💰 Villager Trading
-
-Add custom trades to villager professions.
-
-**Command Format:**
-```bash
-/cr add merchant <result> <count> <max_uses> <gives_xp> <villager_xp> <price_multiplier> <profession> <ingredient1> <amount1> [<ingredient2> <amount2>]
-```
-
-**Parameters:**
-- `max_uses` - Trades before restocking (1-999)
-- `gives_xp` - Whether player gets XP (`true`/`false`)
-- `villager_xp` - XP for villager (affects level)
-- `price_multiplier` - Demand adjustment (0.0-1.0)
-- `profession` - Villager type (see profession list below, comma-separated for multiple)
-  
-**Villager Professions:**
-`FARMER`, `LIBRARIAN`, `BUTCHER`, `NITWIT`, `NONE`, `ARMORER`, `WEAPONSMITH`, `TOOLSMITH`, `LEATHERWORKER`, `MASON`, `FISHERMAN`, `CLERIC`, `FLETCHER`, `SHEPERD`, `CARTOGGRAPHER`
-
-**Examples:**
-
-```bash
-# Expensive diamond trade
-/cr add merchant DIAMOND 1 3 true 15 0.1 LIBRARIAN EMERALD 10 BOOK 5
-
-# Bulk resource trade
-/cr add merchant IRON_INGOT 16 10 false 5 0.05 TOOLSMITH,WEAPONSMITH EMERALD 8
-
-# Special enchanted item trade
-/cr add merchant ENCHANTED_GOLDEN_APPLE 1 1 true 50 0.2 CLERIC EMERALD 32 GOLD_BLOCK 4
+# Convert amethyst blocks back to shards
+/cr add stonecutting AMETHYST_SHARD 4 AMETHYST_BLOCK
 ```
 
 ### 🔧 Recipe Management
@@ -213,33 +195,73 @@ The `recipes.json` file stores all custom recipes in a structured format:
 ```json
 [
   {
-    "type": "shaped",
+    "type": "ShapedRecipe",
+    "key": "recipe_shaped_name_tag_d3987500dd4e4f719a2ec4eaaba1ac19",
     "result": {
-      "item": "GOLDEN_APPLE",
+      "item": "NAME_TAG",
       "count": 1
     },
     "pattern": [
-      "GGG",
-      "GAG", 
-      "GGG"
+      "  S",
+      " PS", 
+      "P  "
     ],
-    "ingredients": {
-      "G": "GOLD_INGOT",
-      "A": "APPLE"
+    "replace": {
+      "S": ["STRING"],
+      "P": ["PAPER"]
     }
   },
   {
-    "type": "shapeless",
+    "type": "ShapelessRecipe",
+    "key": "recipe_shapeless_redstone_2b3f4a1c8e9d4f0b8a1c2d3e4f5a6b7c",
     "result": {
-      "item": "DIAMOND",
-      "count": 1
+      "item": "REDSTONE",
+      "count": 4
     },
     "ingredients": [
       {
-        "item": "COAL_BLOCK",
-        "count": 2
+        "choices": ["NETHER_WART"],
+        "count": 1
+      },
+      {
+        "choices": ["GLOWSTONE_DUST"],
+        "count": 1
       }
     ]
+  },
+  {
+    "type": "StonecuttingRecipe",
+    "key": "recipe_stonecutting_chain_596b39ae483c49ab93b76e5ae0a867e9",
+    "result": {
+      "item": "CHAIN",
+      "count": 4
+    },
+    "ingredient": {
+      "item": "IRON_INGOT"
+    }
+  },
+  {
+    "type": "CookingRecipe",
+    "key": "recipe_cooking_amethyst_shard_3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f",
+    "cookingTypes": [
+      {
+        "type": "BlastingRecipe",
+        "cooking_time": 100
+      },
+      {
+        "type": "FurnaceRecipe",
+        "cooking_time": 200
+      }
+    ],
+    "result": {
+      "item": "AMETHYST_SHARD",
+      "count": 2
+    },
+    "ingredient": [
+      "CALCITE",
+      "TUFF"
+    ],
+    "exp_reward": 1.5
   }
 ]
 ```
@@ -272,6 +294,17 @@ The `recipes.json` file stores all custom recipes in a structured format:
 - Custom recipes override vanilla ones
 - Use unique patterns to avoid conflicts
 - Check recipe index with `/cr list`
+
+## 📞 Support & Contribution
+
+### Getting Help
+- Open an issue on [GitHub](https://github.com/KreativeName1/Custom-Recipes-MC-Paper/issues)
+
+### Contributing
+Contributions are welcome! Feel free to:
+- Submit bug reports
+- Suggest new features
+- Create pull requests
 
 ## 📄 License
 
