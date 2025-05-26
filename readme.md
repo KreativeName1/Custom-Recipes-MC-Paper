@@ -95,8 +95,13 @@ Create recipes where ingredient order doesn't matter.
 
 **Command Format:**
 ```bash
-/cr add shapeless <result> <count> <ingredient> <amount> [<ingredient> <amount>...]
+/cr add shapeless <result> <count> <ingredien1t> <amount1> [<ingredient2> <amount2>...]
 ```
+**Parameters:**
+- `result` - Item to craft (e.g., `REDSTONE`)
+- `count` - Quantity produced (1-64)
+- `ingredient#` - Material to use, comma separated (e.g., `COAL_BLOCK`)
+- `amount#` - Number of items required for that ingredient (e.g., `9`)
 
 **Examples:**
 
@@ -124,6 +129,7 @@ Add custom smelting, smoking, blasting, and campfire recipes.
 - `types` - Cooking methods: `furnace`, `smoking`, `blasting`, `campfire` (comma-separated)
 - `time` - Cooking time in ticks (20 ticks = 1 second)
 - `experience` - XP reward (decimal allowed)
+- `ingredients` - Materials to use, comma separated (e.g., `IRON_ORE`)
 
 **Examples:**
 
@@ -144,8 +150,12 @@ Create precise cutting recipes for the stonecutter.
 
 **Command Format:**
 ```bash
-/cr add stonecutting <result> <count> <ingredient>
+/cr add stonecutting <result> <count> <ingredients>
 ```
+**Parameters:**
+- `result` - Item to produce (e.g., `CHAIN`)
+- `count` - Quantity produced (1-64)
+- `ingredients` - Material to cut, comma separated (e.g., `IRON_INGOT`)
 
 **Examples:**
 
